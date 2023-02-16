@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.facedetection'
+    namespace 'morpheus.softwares.facedetection'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.facedetection"
+        applicationId "morpheus.softwares.facedetection"
         minSdk 24
         targetSdk 33
         versionCode 1

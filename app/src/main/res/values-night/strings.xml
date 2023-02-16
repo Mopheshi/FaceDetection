@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="detect_face">Detect Face</string>
+    <string name="face_detection">FACE DETECTION</string>
+    <string name="morpheus_softwares">Morpheus Softwares</string>
+    <string name="load">Import Image from Device</string>
+    <string name="capture">Capture Image from Camera</string>
+    <string name="import_image">IMPORT IMAGE</string>
+    <string name="capture_image">CAPTURE IMAGE</string>
 </resources>

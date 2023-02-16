@@ -1,14 +1,18 @@
-package com.example.facedetection;
+package morpheus.softwares.facedetection.Activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.mlkit.vision.common.InputImage;
@@ -21,19 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+import morpheus.softwares.facedetection.R;
+
+public class ImportActivity extends AppCompatActivity {
     private static final int SCALING_FACTOR = 10;   // Make detecting images smaller thereby faster
     Button detectFace;
     private ImageView originalImage, detectedImage;
     private FaceDetector detector;
     private Bitmap bitmap;
-    //    private Uri imageUri;
+    BitmapDrawable bitmapDrawable;
+    private Uri imageUri;
     private ArrayList<Integer> images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_import);
 
         FaceDetectorOptions faceDetectorOptions = new FaceDetectorOptions.Builder()
                 .setContourMode(FaceDetectorOptions.CONTOUR_MODE_ALL)
@@ -52,17 +59,25 @@ public class MainActivity extends AppCompatActivity {
         images.add(R.drawable.four);
         images.add(R.drawable.five);
 
+//        Randomly load Bitmap from drawable folder
         bitmap = BitmapFactory.decodeResource(getResources(),
                 images.get(new Random().nextInt(images.size())));
         originalImage.setImageBitmap(bitmap);
 
         originalImage.setOnClickListener(v -> {
-            bitmap = BitmapFactory.decodeResource(getResources(),
-                    images.get(new Random().nextInt(images.size())));
-            originalImage.setImageBitmap(bitmap);
+//            Randomly load Bitmap from drawable folder
+//            bitmap = BitmapFactory.decodeResource(getResources(),
+//                    images.get(new Random().nextInt(images.size())));
+//            originalImage.setImageBitmap(bitmap);
+
+//            Load Bitmap from device folder
+
+            Intent intent = new Intent().setAction(Intent.ACTION_GET_CONTENT).setType("image/*");
+            startActivityForResult(intent, 1);
         });
 
-        detectFace.setOnClickListener(v -> analyzeImage(bitmap));
+        bitmapDrawable = (BitmapDrawable) originalImage.getDrawable();
+        detectFace.setOnClickListener(v -> analyzeImage(bitmapDrawable.getBitmap()));
     }
 
     private void analyzeImage(Bitmap bitmap) {
@@ -102,6 +117,18 @@ public class MainActivity extends AppCompatActivity {
                 (y + height > bitmap.getHeight()) ? bitmap.getHeight() - y : height);
 
         detectedImage.setImageBitmap(cropped);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data != null) {
+            if (data.getData() != null) {
+                imageUri = data.getData();
+                originalImage.setImageURI(imageUri);
+            }
+        }
     }
 
             /*
