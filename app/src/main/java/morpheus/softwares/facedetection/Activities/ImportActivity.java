@@ -1,6 +1,7 @@
 package morpheus.softwares.facedetection.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -32,10 +33,8 @@ public class ImportActivity extends AppCompatActivity {
     Button detectFace;
     private ImageView originalImage, detectedImage;
     private FaceDetector detector;
-    private Bitmap bitmap;
     BitmapDrawable bitmapDrawable;
-    private Uri imageUri;
-    private ArrayList<Integer> images;
+    Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,7 @@ public class ImportActivity extends AppCompatActivity {
         detectedImage = findViewById(R.id.detectedFace);
         detectFace = findViewById(R.id.detectFace);
 
-        images = new ArrayList<>();
+        ArrayList<Integer> images = new ArrayList<>();
         images.add(R.drawable.one);
         images.add(R.drawable.two);
         images.add(R.drawable.three);
@@ -60,8 +59,7 @@ public class ImportActivity extends AppCompatActivity {
         images.add(R.drawable.five);
 
 //        Randomly load Bitmap from drawable folder
-        bitmap = BitmapFactory.decodeResource(getResources(),
-                images.get(new Random().nextInt(images.size())));
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), images.get(new Random().nextInt(images.size())));
         originalImage.setImageBitmap(bitmap);
 
         originalImage.setOnClickListener(v -> {
@@ -78,6 +76,16 @@ public class ImportActivity extends AppCompatActivity {
 
         bitmapDrawable = (BitmapDrawable) originalImage.getDrawable();
         detectFace.setOnClickListener(v -> analyzeImage(bitmapDrawable.getBitmap()));
+//        try {
+//            SharedPreferences sharedPreferences = getSharedPreferences("Uri", MODE_PRIVATE);
+//            Uri uri = Uri.parse(sharedPreferences.getString("uri", String.valueOf(imageUri)));
+//
+//            Bitmap b = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//            detectFace.setOnClickListener(v -> analyzeImage(b));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//        }
     }
 
     private void analyzeImage(Bitmap bitmap) {
@@ -123,10 +131,15 @@ public class ImportActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null) {
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             if (data.getData() != null) {
                 imageUri = data.getData();
                 originalImage.setImageURI(imageUri);
+
+                SharedPreferences sharedPreferences = getSharedPreferences("Uri", MODE_PRIVATE);
+                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                myEdit.putString("uri", String.valueOf(imageUri));
+                myEdit.apply();
             }
         }
     }

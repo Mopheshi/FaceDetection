@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:id="@+id/main"
     tools:context=".Activities.MainActivity">
 
     <LinearLayout
@@ -30,22 +31,22 @@
 
         <Button
             android:id="@+id/importFromDevice"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center"
             android:text="@string/load" />
 
         <Button
             android:id="@+id/captureFromCamera"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/capture" />
 
         <Button
-            android:id="@+id/videoCamera"
-            android:layout_width="wrap_content"
+            android:id="@+id/videoFromCamera"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/video" />
