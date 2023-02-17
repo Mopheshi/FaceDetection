@@ -1,26 +1,29 @@
 package morpheus.softwares.facedetection.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.VideoView;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import morpheus.softwares.facedetection.R;
 
-public class RealTimeCaptureActivity extends AppCompatActivity {
+public class CaptureActivity extends AppCompatActivity {
     private static final int VIDEO_CAPTURE = 500;
-    private VideoView videoView;
+    private ImageView imageView;
     private Button capture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_real_time_capture);
+        setContentView(R.layout.activity_capture);
 
-        videoView = findViewById(R.id.videoView);
+        imageView = findViewById(R.id.imageView);
         capture = findViewById(R.id.capture);
 
-
+        capture.setOnClickListener(v -> {
+            Intent intent = new Intent()
+        });
     }
 }

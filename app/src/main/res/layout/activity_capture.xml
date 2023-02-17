@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.RealTimeCaptureActivity">
+    tools:context=".Activities.CaptureActivity">
 
     <TextView
         android:id="@+id/title"
@@ -16,8 +16,8 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <VideoView
-        android:id="@+id/videoView"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="550dp"
         android:layout_below="@+id/title"

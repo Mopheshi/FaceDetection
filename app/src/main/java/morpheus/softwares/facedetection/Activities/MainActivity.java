@@ -21,6 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
         load.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ImportActivity.class)));
         capture.setOnClickListener(v -> startActivity(new Intent(MainActivity.this,
-                RealTimeCaptureActivity.class)));
+                CaptureActivity.class)));
     }
 }

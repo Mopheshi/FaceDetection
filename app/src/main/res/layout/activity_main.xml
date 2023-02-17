@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:text="@string/face_detection"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -24,7 +24,7 @@
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/r"
             android:adjustViewBounds="true" />
 
@@ -42,6 +42,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/capture" />
+
+        <Button
+            android:id="@+id/videoCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/video" />
 
     </LinearLayout>
 

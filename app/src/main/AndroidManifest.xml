@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.ImportActivity" />
-        <activity android:name=".Activities.RealTimeCaptureActivity" />
+        <activity android:name=".Activities.CaptureActivity" />
 
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"

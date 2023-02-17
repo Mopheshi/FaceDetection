@@ -7,4 +7,5 @@
     <string name="capture">Capture Image from Camera</string>
     <string name="import_image">IMPORT IMAGE</string>
     <string name="capture_image">CAPTURE IMAGE</string>
+    <string name="video">Detect from Camera Video</string>
 </resources>
