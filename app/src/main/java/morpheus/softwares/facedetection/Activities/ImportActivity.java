@@ -63,29 +63,13 @@ public class ImportActivity extends AppCompatActivity {
         originalImage.setImageBitmap(bitmap);
 
         originalImage.setOnClickListener(v -> {
-//            Randomly load Bitmap from drawable folder
-//            bitmap = BitmapFactory.decodeResource(getResources(),
-//                    images.get(new Random().nextInt(images.size())));
-//            originalImage.setImageBitmap(bitmap);
-
-//            Load Bitmap from device folder
-
+//            Load Bitmap from device folder.
             Intent intent = new Intent().setAction(Intent.ACTION_GET_CONTENT).setType("image/*");
             startActivityForResult(intent, 1);
         });
 
         bitmapDrawable = (BitmapDrawable) originalImage.getDrawable();
         detectFace.setOnClickListener(v -> analyzeImage(bitmapDrawable.getBitmap()));
-//        try {
-//            SharedPreferences sharedPreferences = getSharedPreferences("Uri", MODE_PRIVATE);
-//            Uri uri = Uri.parse(sharedPreferences.getString("uri", String.valueOf(imageUri)));
-//
-//            Bitmap b = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-//            detectFace.setOnClickListener(v -> analyzeImage(b));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-//        }
     }
 
     private void analyzeImage(Bitmap bitmap) {
