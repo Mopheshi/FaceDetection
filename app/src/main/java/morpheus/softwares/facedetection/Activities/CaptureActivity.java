@@ -34,5 +34,8 @@ public class CaptureActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
+
+        }
     }
 }
