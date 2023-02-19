@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,11 +31,11 @@ import morpheus.softwares.facedetection.R;
 
 public class CaptureActivity extends AppCompatActivity {
     private static final int SCALING_FACTOR = 10;   // Make detecting images smaller thereby faster
-    BitmapDrawable bitmapDrawable;
-    private FaceDetector detector;
+    Button detect;
     private static final int VIDEO_CAPTURE = 10;
     private ImageView imageView, detected;
-    private Button detect;
+    //    BitmapDrawable bitmapDrawable;
+    private FaceDetector detector;
     private String currentPath;
 
     @Override
