@@ -2,9 +2,12 @@ package morpheus.softwares.facedetection.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
@@ -20,6 +24,8 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import morpheus.softwares.facedetection.R;
@@ -31,6 +37,7 @@ public class CaptureActivity extends AppCompatActivity {
     private static final int VIDEO_CAPTURE = 10;
     private ImageView imageView, detected;
     private Button detect;
+    private String currentPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +54,30 @@ public class CaptureActivity extends AppCompatActivity {
         detected = findViewById(R.id.detected);
         detect = findViewById(R.id.detect);
 
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, VIDEO_CAPTURE);
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        startActivityForResult(intent, VIDEO_CAPTURE);
 
-        bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
-        detect.setOnClickListener(v -> analyzeImage(bitmapDrawable.getBitmap()));
+//        bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+//        detect.setOnClickListener(v -> analyzeImage(bitmapDrawable.getBitmap()));
+
+        detect.setOnClickListener(v -> {
+            String fileName = "photo";
+            File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//            File directory = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            try {
+                File file = File.createTempFile(fileName, ".jpg", directory);
+                currentPath = file.getAbsolutePath();
+
+                Uri imageUri = FileProvider.getUriForFile(CaptureActivity.this, "morpheus" +
+                        ".softwares.facedetection.fileprovider", file);
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intent, VIDEO_CAPTURE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void analyzeImage(Bitmap bitmap) {
@@ -96,7 +122,7 @@ public class CaptureActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPath);
             imageView.setImageBitmap(bitmap);
         }
 
