@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) && (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
             Snackbar.make(findViewById(R.id.main), "Please grant app permissions", Snackbar.LENGTH_LONG).show();
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 5);

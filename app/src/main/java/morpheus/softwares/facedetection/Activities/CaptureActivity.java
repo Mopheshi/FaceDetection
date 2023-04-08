@@ -2,7 +2,6 @@ package morpheus.softwares.facedetection.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,8 +52,8 @@ public class CaptureActivity extends AppCompatActivity {
         detected = findViewById(R.id.detected);
         detect = findViewById(R.id.detect);
 
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(intent, VIDEO_CAPTURE);
+        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(i, VIDEO_CAPTURE);
 
 //        bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
 //        detect.setOnClickListener(v -> analyzeImage(bitmapDrawable.getBitmap()));
@@ -121,8 +120,19 @@ public class CaptureActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == VIDEO_CAPTURE && resultCode == RESULT_OK && data != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(currentPath);
-            imageView.setImageBitmap(bitmap);
+
+            // Create a copy of the resultant image data with a better quality...
+//            Bitmap bitmap = BitmapFactory.decodeFile(currentPath);
+//            Matrix matrix = new Matrix();
+            // Image rotation by 90 degrees...
+//            matrix.postRotate(90);
+//            Bitmap photo = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(),
+//                    matrix, true);
+
+            // Get the resultant 'data' with compressed poor quality image...
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+            imageView.setImageBitmap(photo);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
