@@ -2,10 +2,9 @@ package morpheus.softwares.facedetection.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
@@ -22,8 +20,6 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import morpheus.softwares.facedetection.R;
@@ -35,7 +31,8 @@ public class CaptureActivity extends AppCompatActivity {
     private ImageView imageView, detected;
     //    BitmapDrawable bitmapDrawable;
     private FaceDetector detector;
-    private String currentPath;
+    //    private String currentPath;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,22 +56,23 @@ public class CaptureActivity extends AppCompatActivity {
 //        detect.setOnClickListener(v -> analyzeImage(bitmapDrawable.getBitmap()));
 
         detect.setOnClickListener(v -> {
-            String fileName = "photo";
-            File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//            String fileName = "photo";
+//            File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 //            File directory = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            try {
-                File file = File.createTempFile(fileName, ".jpg", directory);
-                currentPath = file.getAbsolutePath();
-
-                Uri imageUri = FileProvider.getUriForFile(CaptureActivity.this, "morpheus" +
-                        ".softwares.facedetection.fileprovider", file);
-
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent, VIDEO_CAPTURE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                File file = File.createTempFile(fileName, ".jpg", directory);
+//                currentPath = file.getAbsolutePath();
+//
+//                Uri imageUri = FileProvider.getUriForFile(CaptureActivity.this, "morpheus" +
+//                        ".softwares.facedetection.fileprovider", file);
+//
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//                startActivityForResult(intent, VIDEO_CAPTURE);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            analyzeImage(bitmap);
         });
     }
 
@@ -97,9 +95,12 @@ public class CaptureActivity extends AppCompatActivity {
             cropDetectedFaces(bitmap, faces);
             Toast.makeText(getApplicationContext(), String.format("Detected %s faces...",
                     faces.size()), Toast.LENGTH_LONG).show();
-        }).addOnFailureListener(e -> Toast.makeText(getApplicationContext(),
-                String.format("Detection failed due to: %s.." +
-                        ".", e.getMessage()), Toast.LENGTH_LONG).show());
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getApplicationContext(),
+                    String.format("Detection failed due to: %s.." +
+                            ".", e.getMessage()), Toast.LENGTH_LONG).show();
+            System.out.println(e.getMessage());
+        });
     }
 
     private void cropDetectedFaces(Bitmap bitmap, @NonNull List<Face> faces) {
@@ -130,11 +131,39 @@ public class CaptureActivity extends AppCompatActivity {
 //                    matrix, true);
 
             // Get the resultant 'data' with compressed poor quality image...
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            bitmap = (Bitmap) data.getExtras().get("data");
 
-            imageView.setImageBitmap(photo);
+//            imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 120, 120, false));
+            imageView.setImageBitmap(getResizedBitmap(bitmap));
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Resizes a bitmap in by creating a new bitmap with dimensions less than or equal to 32 pixels
+     * {@code @BingChat}
+     */
+    public Bitmap getResizedBitmap(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        if (width > 32 || height > 32) {
+            float scaleWidth = ((float) 32) / width;
+            float scaleHeight = ((float) 32) / height;
+
+            // Create a Matrix for the manipulation
+            Matrix matrix = new Matrix();
+
+            // Resize the Bitmap
+            matrix.postScale(scaleWidth, scaleHeight);
+
+            // Recreate the new Bitmap
+            Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
+            bitmap.recycle();
+            return resizedBitmap;
+        } else {
+            return bitmap;
+        }
     }
 }

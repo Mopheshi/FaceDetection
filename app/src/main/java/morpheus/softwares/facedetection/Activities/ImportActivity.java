@@ -3,7 +3,6 @@ package morpheus.softwares.facedetection.Activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -22,9 +21,7 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import morpheus.softwares.facedetection.R;
 
@@ -51,25 +48,31 @@ public class ImportActivity extends AppCompatActivity {
         detectedImage = findViewById(R.id.detectedFace);
         detectFace = findViewById(R.id.detectFace);
 
-        ArrayList<Integer> images = new ArrayList<>();
-        images.add(R.drawable.one);
-        images.add(R.drawable.two);
-        images.add(R.drawable.three);
-        images.add(R.drawable.four);
-        images.add(R.drawable.five);
+//        ArrayList<Integer> images = new ArrayList<>();
+//        images.add(R.drawable.one);
+//        images.add(R.drawable.two);
+//        images.add(R.drawable.three);
+//        images.add(R.drawable.four);
+//        images.add(R.drawable.five);
 
-//        Randomly load Bitmap from drawable folder
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), images.get(new Random().nextInt(images.size())));
-        originalImage.setImageBitmap(bitmap);
+        // Randomly load Bitmap from drawable folder
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), images.get(new Random().nextInt(images.size())));
+//        originalImage.setImageBitmap(bitmap);
+
+        // Load image from device
+        Intent intent = new Intent().setAction(Intent.ACTION_GET_CONTENT).setType("image/*");
+        startActivityForResult(intent, 1);
 
         originalImage.setOnClickListener(v -> {
 //            Load Bitmap from device folder.
-            Intent intent = new Intent().setAction(Intent.ACTION_GET_CONTENT).setType("image/*");
-            startActivityForResult(intent, 1);
+            Intent i = new Intent().setAction(Intent.ACTION_GET_CONTENT).setType("image/*");
+            startActivityForResult(i, 1);
         });
 
-        bitmapDrawable = (BitmapDrawable) originalImage.getDrawable();
-        detectFace.setOnClickListener(v -> analyzeImage(bitmapDrawable.getBitmap()));
+//        bitmapDrawable = (BitmapDrawable) originalImage.getDrawable();
+        originalImage.buildDrawingCache();
+        Bitmap bitmap = originalImage.getDrawingCache(true);
+        detectFace.setOnClickListener(v -> analyzeImage(bitmap));
     }
 
     private void analyzeImage(Bitmap bitmap) {
