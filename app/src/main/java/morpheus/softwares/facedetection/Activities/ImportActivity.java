@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -21,6 +21,7 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 
+import java.io.IOException;
 import java.util.List;
 
 import morpheus.softwares.facedetection.R;
@@ -30,7 +31,7 @@ public class ImportActivity extends AppCompatActivity {
     Button detectFace;
     private ImageView originalImage, detectedImage;
     private FaceDetector detector;
-    BitmapDrawable bitmapDrawable;
+    //    BitmapDrawable bitmapDrawable;
     Uri imageUri;
 
     @Override
@@ -69,10 +70,15 @@ public class ImportActivity extends AppCompatActivity {
             startActivityForResult(i, 1);
         });
 
-//        bitmapDrawable = (BitmapDrawable) originalImage.getDrawable();
-        originalImage.buildDrawingCache();
-        Bitmap bitmap = originalImage.getDrawingCache(true);
-        detectFace.setOnClickListener(v -> analyzeImage(bitmap));
+        SharedPreferences sharedPreferences = getSharedPreferences("Uri", MODE_PRIVATE);
+        String uri = sharedPreferences.getString("uri", "");
+
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(uri));
+            detectFace.setOnClickListener(v -> analyzeImage(bitmap));
+        } catch (IOException e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void analyzeImage(Bitmap bitmap) {
